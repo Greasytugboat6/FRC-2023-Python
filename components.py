@@ -66,3 +66,11 @@ class Arm:
             self.intakeMotor.set(-0.25)
         else:
             self.intakeMotor.set(0)
+
+        if self.controller.getYButton():
+            self.shoulderMotor.set(0.26)
+        elif self.controller.getXButton():
+            self.shoulderMotor.set(-0.25)
+        else:
+            self.shoulderMotor.set(0)
+            
