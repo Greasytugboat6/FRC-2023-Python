@@ -1,6 +1,7 @@
 from wpilib.drive import MecanumDrive
 from portmap import CAN
 import rev
+import math
 
 class DriveBase:
     def __init__(self, controller):
@@ -46,6 +47,32 @@ class DriveBase:
             self.robotDrive.driveCartesian(xSpeed = speed)
             distance = self.frontRightMotor.getEncoder().getPosition() * 0.61
         self.robotDrive.stopMotor()
+    
+    def translateDistance(self, xMeters, yMeters, rotation, speed):
+        """Translates robot at specified speed"""
+        totalDisplacement = math.sqrt(xMeters ** 2 + yMeters ** 2) + math.abs(rotation) * 2.5
+        currentDisplacement = 0
+        if xMeters > yMeters and xMeters > rotation:
+            speedCoefficient = speed / xMeters
+        elif yMeters > rotation:
+            speedCoefficient = speed / yMeters
+        else:
+            speedCoefficient = speed / rotation
+        
+        encoders = (self.frontLeftMotor.getEncoder(), self.frontRightMotor.getEncoder(), self.rearLeftMotor.getEncoder(), self.rearRightMotor.getEncoder())
+        for encoder in encoders:
+            encoder.setPosition(0)
+        
+        while currentDisplacement < currentDisplacement:
+            self.robotDrive.driveCartesian(xSpeed = xMeters * speedCoefficient, ySpeed = yMeters * speedCoefficient, zRotation = rotation * speedCoefficient)
+            currentDisplacement = 0
+            for encoder in encoders:
+                currentDisplacement += math.abs(encoder.getPosition())
+            currentDisplacement /= 4
+        self.robotDrive.stopMotor()
+
+
+
 
 class Arm:
     def __init__(self, controller):
