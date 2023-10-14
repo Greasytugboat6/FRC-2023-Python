@@ -1,6 +1,6 @@
 import wpilib
 
-from drive_base import drive_base
+from drive_base import DriveBase
 from arm import Arm
 from portmap import USB
 
