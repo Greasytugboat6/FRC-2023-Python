@@ -2,7 +2,7 @@ import wpilib
 
 from drive_base import DriveBase
 from arm import Arm
-from portmap import USB
+from robot_map import USB
 
 
 class MyRobot(wpilib.TimedRobot):

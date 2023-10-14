@@ -1,12 +1,12 @@
 from rev import CANSparkMax
 from wpilib.drive import MecanumDrive
 
-from portmap import CAN
+from robot_map import CAN
 
 
 class DriveBase:
     def __init__(self, controller):
-        self.mode = mode
+        self.mode = "IDLE"
 
         # Intializes motors for the drive base.
         self.frontRightMotor = CANSparkMax(CAN.frontRightChannel, CANSparkMax.MotorType.kBrushless)
@@ -29,7 +29,7 @@ class DriveBase:
 
     def setMode(self, mode):
         self.mode = mode
-        
+
     def autonomousInit(self):
         pass
 
