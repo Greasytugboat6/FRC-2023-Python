@@ -1,54 +1,47 @@
 import wpilib
-import wpilib.drive
+from wpilib.drive import MecanumDrive
+from portmap import CAN, USB
+import rev
 
 
 class MyRobot(wpilib.TimedRobot):
-    # Channels on the roboRIO that the motor controllers are plugged in to
-    frontRightChannel = 2
-    rearRightChannel = 1
-    frontLeftChannel = 3
-    rearLeftChannel = 4
-    shoulderChannel = 5
-    extenderChannel = 6
-    intakeChannel = 7
-
-    # The channel on the driver station that the joystick is connected to
-    joystickChannel = 0
-
     def robotInit(self):
-        """
-        This function is called upon program startup and
-        should be used for any intialization code.
-        """
-        self.frontRightMotor = wpilib.PWMSparkMax(self.frontRightChannel)
-        self.rearRightMotor = wpilib.PWMSparkMax(self.rearRightChannel)
-        self.frontLeftMotor = wpilib.PWMSparkMax(self.frontLeftChannel)
-        self.rearLeftMotor = wpilib.PWMSparkMax(self.rearLeftChannel)
-        self.shoulderMotor = wpilib.PWMSparkMax(self.shoulderChannel)
-        self.extenderMotor = wpilib.PWMSparkMax(self.extenderChannel)
-        self.intakeMotor = wpilib.PWMSparkMax(self.intakeChannel)
+        self.frontRightMotor = rev.CANSparkMax(CAN.frontRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearRightMotor = rev.CANSparkMax(CAN.rearRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.frontLeftMotor = rev.CANSparkMax(CAN.frontLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearLeftMotor = rev.CANSparkMax(CAN.rearLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.shoulderMotor = rev.CANSparkMax(CAN.shoulderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.extenderMotor = rev.CANSparkMax(CAN.extenderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.intakeMotor = rev.CANSparkMax(CAN.intakeChannel, rev.CANSparkMax.MotorType.kBrushless)
 
-        self.robotDrive = wpilib.drive.MecanumDrive(self.frontLeftMotor,
-                                                    self.rearLeftMotor,
-                                                    self.frontRightMotor,
-                                                    self.rearRightMotor)
+        self.frontRightMotor.restoreFactoryDefaults()
+        self.rearRightMotor.restoreFactoryDefaults()
+        self.frontLeftMotor.restoreFactoryDefaults()
+        self.rearLeftMotor.restoreFactoryDefaults()
+        self.shoulderMotor.restoreFactoryDefaults()
+        self.extenderMotor.restoreFactoryDefaults()
+        self.intakeMotor.restoreFactoryDefaults()
 
-        self.stick = wpilib.XboxController(self.joystickChannel)
+        self.frontRightMotor.setInverted(True)
+        self.rearRightMotor.setInverted(True)
+
+        self.robotDrive = MecanumDrive(CAN.frontLeftMotor,
+                                       CAN.rearLeftMotor,
+                                       CAN.frontRightMotor,
+                                       CAN.rearRightMotor)
+
+        self.stick = wpilib.XboxController(USB.joystickChannel)
 
     def autonomousInit(self):
-        """This function is run once each time the robot enters autonomous mode."""
         pass
 
     def autonomousPeriodic(self):
-        """This function is called periodically during autonomous"""
         pass
 
     def teleopInit(self):
-        """This function is run once each time the robot enters operator control."""
         self.robotDrive.setSafetyEnabled(True)
 
     def teleopPeriodic(self):
-        """This function is called periodically during operator control."""
         self.robotDrive.driveCartesian(
             self.stick.getLeftX(),
             self.stick.getLeftY(),
