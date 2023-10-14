@@ -1,6 +1,7 @@
 import wpilib
-from portmap import USB
+
 from components import DriveBase, Arm
+from portmap import USB
 
 
 class MyRobot(wpilib.TimedRobot):

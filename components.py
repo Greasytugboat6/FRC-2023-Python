@@ -1,14 +1,16 @@
+from rev import CANSparkMax
 from wpilib.drive import MecanumDrive
+
 from portmap import CAN
-import rev
+
 
 class DriveBase:
     def __init__(self, controller):
         # Intializes motors for the drive base.
-        self.frontRightMotor = rev.CANSparkMax(CAN.frontRightChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.rearRightMotor = rev.CANSparkMax(CAN.rearRightChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.frontLeftMotor = rev.CANSparkMax(CAN.frontLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.rearLeftMotor = rev.CANSparkMax(CAN.rearLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.frontRightMotor = CANSparkMax(CAN.frontRightChannel, CANSparkMax.MotorType.kBrushless)
+        self.rearRightMotor = CANSparkMax(CAN.rearRightChannel, CANSparkMax.MotorType.kBrushless)
+        self.frontLeftMotor = CANSparkMax(CAN.frontLeftChannel, CANSparkMax.MotorType.kBrushless)
+        self.rearLeftMotor = CANSparkMax(CAN.rearLeftChannel, CANSparkMax.MotorType.kBrushless)
 
         self.frontRightMotor.restoreFactoryDefaults()
         self.rearRightMotor.restoreFactoryDefaults()
@@ -19,9 +21,9 @@ class DriveBase:
         self.rearRightMotor.setInverted(True)
 
         self.controller = controller
-    
-        self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor, self.rearRightMotor)
 
+        self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor,
+                                       self.rearRightMotor)
 
     def autonomousInit(self):
         pass
@@ -40,14 +42,15 @@ class DriveBase:
             self.controller.getRightY()
         )
 
+
 class Arm:
     def __init__(self, controller):
         self.mode = "IDLE"
 
         # Intializes motors for the arm.
-        self.shoulderMotor = rev.CANSparkMax(CAN.shoulderChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.extenderMotor = rev.CANSparkMax(CAN.extenderChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.intakeMotor = rev.CANSparkMax(CAN.intakeChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.shoulderMotor = CANSparkMax(CAN.shoulderChannel, CANSparkMax.MotorType.kBrushless)
+        self.extenderMotor = CANSparkMax(CAN.extenderChannel, CANSparkMax.MotorType.kBrushless)
+        self.intakeMotor = CANSparkMax(CAN.intakeChannel, CANSparkMax.MotorType.kBrushless)
 
         self.shoulderMotor.restoreFactoryDefaults()
         self.extenderMotor.restoreFactoryDefaults()
@@ -99,4 +102,3 @@ class Arm:
             self.extenderMotor.set(-0.25)
         else:
             self.extenderMotor.set(0)
-            
