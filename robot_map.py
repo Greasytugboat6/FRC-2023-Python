@@ -7,5 +7,6 @@ class CAN:
     extenderChannel = 6
     intakeChannel = 7
 
+
 class USB:
     controllerChannel = 0
