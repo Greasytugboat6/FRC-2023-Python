@@ -10,21 +10,21 @@ class MyRobot(wpilib.TimedRobot):
         self.Arm = Arm(controller)
 
     def autonomousInit(self):
-        DriveBase.autonomousInit()
-        Arm.autonomousInit()
+        self.DriveBase.autonomousInit()
+        self.Arm.autonomousInit()
 
     def autonomousPeriodic(self):
-        DriveBase.autonomousInit
-        Arm.autonomousInit
+        self.DriveBase.autonomousPeriodic()
+        self.Arm.autonomousPeriodic()
 
     def teleopInit(self):
-        DriveBase.teleopInit()
-        Arm.teleopInit()
+        self.DriveBase.teleopInit()
+        self.Arm.teleopInit()
 
 
     def teleopPeriodic(self):
-        DriveBase.teleopPeriodic()
-        Arm.teleopPeriodic()
+        self.DriveBase.teleopPeriodic()
+        self.Arm.teleopPeriodic()
 
 
 if __name__ == "__main__":

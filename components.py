@@ -19,7 +19,7 @@ class DriveBase:
 
         self.controller = controller
 
-        self.robotDrive = MecanumDrive(self.DriveBase.frontLeftMotor, self.DriveBase.rearLeftMotor, self.DriveBase.frontRightMotor, self.DriveBase.rearRightMotor)
+        self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor, self.rearRightMotor)
 
 
     def autonomousInit(self):
