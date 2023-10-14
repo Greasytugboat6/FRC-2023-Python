@@ -1,6 +1,7 @@
 import wpilib
 
-from components import DriveBase, Arm
+from drive_base import drive_base
+from arm import Arm
 from portmap import USB
 
 
