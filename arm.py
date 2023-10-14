@@ -1,5 +1,4 @@
 from rev import CANSparkMax
-from wpilib.drive import MecanumDrive
 
 from robot_map import CAN
 
