@@ -8,4 +8,4 @@ class CAN:
     intakeChannel = 7
 
 class USB:
-    controller = 0
+    controllerChannel = 0
