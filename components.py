@@ -19,7 +19,7 @@ class DriveBase:
 
         self.controller = controller
 
-        self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor, self.rearRightMotor)
+        self.robotDrive = MecanumDrive(self.DriveBase.frontLeftMotor, self.DriveBase.rearLeftMotor, self.DriveBase.frontRightMotor, self.DriveBase.rearRightMotor)
 
 
     def autonomousInit(self):
@@ -37,6 +37,15 @@ class DriveBase:
             self.controller.getLeftX(),
             self.controller.getRightY()
         )
+
+    def driveForward(self, speed, meters):
+        """Moves the robot forward specified distance"""
+        distance = 0
+        self.frontRightMotor.getEncoder().setPosition(0)
+        while distance < meters:
+            self.robotDrive.driveCartesian(xSpeed = speed)
+            distance = self.frontRightMotor.getEncoder().getPosition() * 0.61
+        self.robotDrive.stopMotor()
 
 class Arm:
     def __init__(self, controller):
