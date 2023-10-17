@@ -1,4 +1,4 @@
-from rev import CANSparkMax
+import rev
 
 from robot_map import CAN
 
@@ -7,9 +7,9 @@ class Arm:
         self.mode = "IDLE"
 
         # Intializes motors for the arm.
-        self.shoulderMotor = CANSparkMax(CAN.shoulderChannel, CANSparkMax.MotorType.kBrushless)
-        self.extenderMotor = CANSparkMax(CAN.extenderChannel, CANSparkMax.MotorType.kBrushless)
-        self.intakeMotor = CANSparkMax(CAN.intakeChannel, CANSparkMax.MotorType.kBrushless)
+        self.shoulderMotor = rev.CANSparkMax(CAN.shoulderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.extenderMotor = rev.CANSparkMax(CAN.extenderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.intakeMotor = rev.CANSparkMax(CAN.intakeChannel, rev.CANSparkMax.MotorType.kBrushless)
 
         self.shoulderMotor.restoreFactoryDefaults()
         self.extenderMotor.restoreFactoryDefaults()
@@ -51,15 +51,15 @@ class Arm:
             self.shoulderMotor.set(0.25)
             targetPosition = self.shoulderEncoder.getPosition()
         elif self.controller.getXButton():
-            self.shoulderMotor.set(-0.25)
+            self.shoulderMotor.set(-0.1)
             self.targetPosition = self.shoulderEncoder.getPosition()
         else:
-            self.shoulderPIDController.setReference(self.targetPosition, CANSparkMax.ControlType.kPosition)
+            self.shoulderPIDController.setReference(self.targetPosition, rev.CANSparkMax.ControlType.kPosition)
 
         # Handles control on the extender motor.
-        if self.controller.getPOV() == 0:
+        if self.controller.getPOV() == 180:
             self.extenderMotor.set(0.25)
-        elif self.controller.getPOV() == 90:
+        elif self.controller.getPOV() == 0:
             self.extenderMotor.set(-0.25)
         else:
             self.extenderMotor.set(0)
