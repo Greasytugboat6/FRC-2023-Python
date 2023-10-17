@@ -4,8 +4,6 @@ from robot_map import CAN
 
 class Arm:
     def __init__(self, controller):
-        self.mode = "IDLE"
-
         # Intializes motors for the arm.
         self.shoulderMotor = rev.CANSparkMax(CAN.shoulderChannel, rev.CANSparkMax.MotorType.kBrushless)
         self.extenderMotor = rev.CANSparkMax(CAN.extenderChannel, rev.CANSparkMax.MotorType.kBrushless)
@@ -24,9 +22,6 @@ class Arm:
         self.targetPosition = self.shoulderEncoder.getPosition()
 
         self.controller = controller
-
-    def setMode(self, mode):
-        self.mode = mode
 
     def autonomousInit(self):
         pass
