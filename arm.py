@@ -48,13 +48,14 @@ class Arm:
 
         # Handles control on the shoulder motor.
         if self.controller.getYButton():
-            self.shoulderMotor.set(0.25)
-            targetPosition = self.shoulderEncoder.getPosition()
+            self.shoulderPIDController.setReference(0.1, rev.CANSparkMax.ControlType.kVelocity)
+            self.targetPosition = self.shoulderEncoder.getPosition()
         elif self.controller.getXButton():
-            self.shoulderMotor.set(-0.1)
+            self.shoulderPIDController.setReference(-0.1, rev.CANSparkMax.ControlType.kVelocity)
             self.targetPosition = self.shoulderEncoder.getPosition()
         else:
             self.shoulderPIDController.setReference(self.targetPosition, rev.CANSparkMax.ControlType.kPosition)
+            self.shoulderPIDController.setReference(0, rev.CANSparkMax.ControlType.kVelocity)
 
         # Handles control on the extender motor.
         if self.controller.getPOV() == 180:
