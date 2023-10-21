@@ -1,5 +1,7 @@
 import rev
+from wpilib import SPI
 from wpilib.drive import MecanumDrive
+from navx import AHRS
 
 from robot_map import CAN
 
@@ -20,39 +22,67 @@ class DriveTrain:
         self.frontRightMotor.setInverted(True)
         self.rearRightMotor.setInverted(True)
 
+        self.frontRightEncoder = self.frontRightMotor.getEncoder()
+        self.rearRightEncoder = self.rearRightMotor.getEncoder()
+        self.frontLeftEncoder = self.frontLeftMotor.getEncoder()
+        self.rearLeftEncoder = self.rearLeftMotor.getEncoder()
+
         self.controller = controller
 
-        self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor,
-                                       self.rearRightMotor)
+        self.gyroscope = AHRS(SPI.Port.kMXP)
+        self.gyroscope.reset()
+
+        self.robotDrive = MecanumDrive(self.frontRightMotor, self.rearRightMotor, self.frontLeftMotor,
+                                       self.rearLeftMotor)
 
     def moveDistance(self, distance):
-        """Move the drive train a specified distance."""
-        # To calculate the distanceSoFar, use the following formula:
-        # distanceSoFar = (avgDistance / encoder_resolution) * distance_per_revolution
+        """Move the drive train a specified distance in inches."""
+        print(f"Moving {distance}")
+        self.frontRightEncoder.setPosition(0.0)
+        self.rearRightEncoder.setPosition(0.0)
+        self.frontLeftEncoder.setPosition(0.0)
+        self.rearLeftEncoder.setPosition(0.0)
 
-        # Where:
-        # - encoder_resolution: Number of encoder counts per revolution.
-        # - avgDistance: The average encoder count from all wheels (initialize each count to 0).
-        # - distance_per_revolution: The distance covered by one revolution.
+        distance /= 1.93
 
-        # Ensure that this function maintains forward motion as long as the distance is less than distanceSoFar.
-        pass
+        avgDistance = (abs(self.frontRightEncoder.getPosition()) + abs(self.rearRightEncoder.getPosition()) 
+                       + abs(self.frontLeftEncoder.getPosition()) + abs(self.rearLeftEncoder.getPosition())) / 4
+        
+        while avgDistance < distance:
+            avgDistance = (abs(self.frontRightEncoder.getPosition()) + abs(self.rearRightEncoder.getPosition()) 
+                           + abs(self.frontLeftEncoder.getPosition()) + abs(self.rearLeftEncoder.getPosition())) / 4
+            print(avgDistance)
+            self.robotDrive.driveCartesian(-.2, 0, 0)
+
+    def autoBalance(self):
+        roll = self.gyroscope.getRoll() - self.intialRoll
+        if (roll> 1):
+            self.robotDrive.driveCartesian(roll/100, 0, 0)
+        elif (roll < -1):
+            self.robotDrive.driveCartesian(roll/100, 0, 0)
+        else:
+            self.robotDrive.driveCartesian(0, 0, 0)
+            
 
     def autonomousInit(self):
-        # In Python, I *think* calling functions one by one should execute them in order. 
-        # If we need parallelism for speed, we may need to explore some libraries such as asyncio .
-        pass
+        self.intialRoll = self.gyroscope.getRoll()
+        self.robotDrive.setSafetyEnabled(False)
 
     def autonomousPeriodic(self):
-        pass
+        self.autoBalance()
 
     def teleopInit(self):
-        self.robotDrive.setSafetyEnabled(True)
+        self.intialRoll = self.gyroscope.getRoll()
+        self.robotDrive.setSafetyEnabled(False)
 
     def teleopPeriodic(self):
         # Handles the movement of the drive base.
-        self.robotDrive.driveCartesian(
-            self.controller.getLeftY(),
-            self.controller.getLeftX(),
-            self.controller.getRightY()
-        )
+        if abs(self.controller.getLeftX()) > 0.1 or abs(self.controller.getLeftY()) > 0.1 or abs(self.controller.getRightY()) > 0.1:
+            self.robotDrive.driveCartesian(
+                self.controller.getLeftY(),
+                -self.controller.getLeftX(),
+                self.controller.getRightY()
+            )
+        if self.controller.getLeftBumper():
+            print("bumper")
+            self.autoBalance()
