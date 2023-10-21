@@ -1,15 +1,15 @@
 import wpilib
 
-from drive_base import DriveBase
+from drive_train import DriveTrain
 from arm import Arm
 from robot_map import USB
 
 
 class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
-        """ This function is called upon program startup."""
+        """This function is called upon program startup."""
         controller = wpilib.XboxController(USB.controllerChannel)
-        self.DriveBase = DriveBase(controller)
+        self.DriveBase = DriveTrain(controller)
         self.Arm = Arm(controller)
 
     def autonomousInit(self):
