@@ -8,9 +8,9 @@ from robot_map import USB
 class MyRobot(wpilib.TimedRobot):
     def robotInit(self):
         """This function is called upon program startup."""
-        controller = wpilib.XboxController(USB.controllerChannel)
-        self.DriveTrain = DriveTrain(controller)
-        self.Arm = Arm(controller)
+        self.controller = wpilib.XboxController(USB.controllerChannel)
+        self.DriveTrain = DriveTrain(self.controller)
+        self.Arm = Arm(self.controller)
 
     def autonomousInit(self):
         """This function is run once each time the robot enters autonomous mode."""
@@ -18,23 +18,22 @@ class MyRobot(wpilib.TimedRobot):
         self.BALANCE = False
         self.Arm.shoulderEncoder.setPosition(0)
         self.Arm.extenderEncoder.setPosition(0)
-        self.DriveTrain.intialRoll = self.gyroscope.getRoll()
+        self.DriveTrain.intialRoll = self.DriveTrain.gyroscope.getRoll()
         self.DriveTrain.robotDrive.setSafetyEnabled(False)
-        self.Arm.setPosition(16, 13)
-        self.IDLE = True
-        self.DriveTrain.moveDistance(18)
+        # self.Arm.setPosition(16, 13)
+        # self.IDLE = True
+        self.DriveTrain.moveDistance(0.5)
 
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous."""
         if (self.IDLE):
-            print("Idling")
-            self.Arm.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
-            self.Arm.extenderPIDController.setReference(self.extenderPosition, rev.CANSparkMax.ControlType.kPosition)
+            self.Arm.shoulderPIDController.setReference(self.Arm.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
+            self.Arm.extenderPIDController.setReference(self.Arm.extenderPosition, rev.CANSparkMax.ControlType.kPosition)
         if (self.BALANCE):
             self.DriveTrain.autoBalance()
-        self.shoulderPosition = self.Arm.shoulderEncoder.getPosition()
-        self.extenderPosition = self.Arm.extenderEncoder.getPosition()
+        self.Arm.shoulderPosition = self.Arm.shoulderEncoder.getPosition()
+        self.Arm.extenderPosition = self.Arm.extenderEncoder.getPosition()
 
     def teleopInit(self):
         """This function is run once each time the robot enters teleoperated mode."""
@@ -45,6 +44,10 @@ class MyRobot(wpilib.TimedRobot):
         """This function is called periodically during operator control."""
         self.DriveTrain.teleopPeriodic()
         self.Arm.teleopPeriodic()
+
+        if self.controller.getStartButton():
+            self.Arm.shoulderEncoder.setPosition(0)
+            self.Arm.extenderEncoder.setPosition(0)
 
 
 if __name__ == "__main__":

@@ -31,6 +31,9 @@ class Arm:
 
         self.controller = controller
 
+        self.shoulderPosition = self.shoulderEncoder.getPosition()
+        self.extenderPosition = self.extenderEncoder.getPosition()
+
     def setPosition(self, shoulderPosition, extenderPosition):
         while ((self.shoulderEncoder.getPosition() > shoulderPosition + 0.1 or self.shoulderEncoder.getPosition() < shoulderPosition - 0.1) and 
                (self.extenderEncoder.getPosition() > extenderPosition + 0.1 or self.extenderEncoder.getPosition() < shoulderPosition - 0.1)):
@@ -76,5 +79,5 @@ class Arm:
         else:
             self.extenderPIDController.setReference(self.extenderTarget, rev.CANSparkMax.ControlType.kPosition)
 
-        print(f"Shoulder Target: {self.shoulderTarget}")
-        print(f"Extender Target: {self.extenderTarget}")
+        # print(f"Shoulder Target: {self.shoulderTarget}")
+        # print(f"Extender Target: {self.extenderTarget}")

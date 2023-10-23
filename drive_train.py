@@ -37,6 +37,9 @@ class DriveTrain:
 
     def moveDistance(self, distance):
         """Move the drive train a specified distance in inches."""
+        # does not currently work, worked on 10/21 
+        print("Moving")
+
         self.frontRightEncoder.setPosition(0.0)
         self.rearRightEncoder.setPosition(0.0)
         self.frontLeftEncoder.setPosition(0.0)
@@ -59,6 +62,7 @@ class DriveTrain:
             self.robotDrive.driveCartesian(roll/100, 0, 0)
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
+        # print(roll)
             
     def teleopInit(self):
         self.intialRoll = self.gyroscope.getRoll()
@@ -66,11 +70,11 @@ class DriveTrain:
 
     def teleopPeriodic(self):
         # Handles the movement of the drive base.
-        if abs(self.controller.getLeftX()) > 0.1 or abs(self.controller.getLeftY()) > 0.1 or abs(self.controller.getRightY()) > 0.1:
-            self.robotDrive.driveCartesian(
-                self.controller.getLeftY(),
-                -self.controller.getLeftX(),
-                self.controller.getRightY()
-            )
+        #if abs(self.controller.getLeftX()) > 0.1 or abs(self.controller.getLeftY()) > 0.1 or abs(self.controller.getRightY()) > 0.1:
+        self.robotDrive.driveCartesian(
+            self.controller.getLeftY(),
+            -self.controller.getLeftX(),
+            self.controller.getRightX()
+        )
         if self.controller.getLeftBumper():
             self.autoBalance()
