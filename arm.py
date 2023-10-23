@@ -39,12 +39,6 @@ class Arm:
 
         print("Done")
 
-    def autonomousInit(self):
-        pass
-        
-    def autonomousPeriodic(self):
-        pass
-
     def teleopInit(self):
         self.shoulderTarget = self.shoulderEncoder.getPosition()
         self.shoulderEncoder.setPosition(0)

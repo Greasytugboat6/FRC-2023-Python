@@ -60,14 +60,6 @@ class DriveTrain:
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
             
-
-    def autonomousInit(self):
-        self.intialRoll = self.gyroscope.getRoll()
-        self.robotDrive.setSafetyEnabled(False)
-
-    def autonomousPeriodic(self):
-        self.autoBalance()
-
     def teleopInit(self):
         self.intialRoll = self.gyroscope.getRoll()
         self.robotDrive.setSafetyEnabled(False)
