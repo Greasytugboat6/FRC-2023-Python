@@ -37,7 +37,6 @@ class DriveTrain:
 
     def moveDistance(self, distance):
         """Move the drive train a specified distance in inches."""
-        print(f"Moving {distance}")
         self.frontRightEncoder.setPosition(0.0)
         self.rearRightEncoder.setPosition(0.0)
         self.frontLeftEncoder.setPosition(0.0)
@@ -56,9 +55,7 @@ class DriveTrain:
 
     def autoBalance(self):
         roll = self.gyroscope.getRoll() - self.intialRoll
-        if (roll> 1):
-            self.robotDrive.driveCartesian(roll/100, 0, 0)
-        elif (roll < -1):
+        if (abs(roll) > 1):
             self.robotDrive.driveCartesian(roll/100, 0, 0)
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
@@ -84,5 +81,4 @@ class DriveTrain:
                 self.controller.getRightY()
             )
         if self.controller.getLeftBumper():
-            print("bumper")
             self.autoBalance()
