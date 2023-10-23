@@ -37,8 +37,6 @@ class Arm:
             self.shoulderPIDController.setReference(shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
             self.extenderPIDController.setReference(extenderPosition, rev.CANSparkMax.ControlType.kPosition)
 
-        print("Done")
-
     def teleopInit(self):
         self.shoulderTarget = self.shoulderEncoder.getPosition()
         self.shoulderEncoder.setPosition(0)

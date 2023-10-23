@@ -14,15 +14,14 @@ class MyRobot(wpilib.TimedRobot):
 
     def autonomousInit(self):
         """This function is run once each time the robot enters autonomous mode."""
-        self.DriveTrain.intialRoll = self.gyroscope.getRoll()
-        self.DriveTrain.robotDrive.setSafetyEnabled(False)
+        self.IDLE = False
+        self.BALANCE = False
         self.Arm.shoulderEncoder.setPosition(0)
         self.Arm.extenderEncoder.setPosition(0)
+        self.DriveTrain.intialRoll = self.gyroscope.getRoll()
+        self.DriveTrain.robotDrive.setSafetyEnabled(False)
         self.Arm.setPosition(16, 13)
-        self.shoulderPosition = self.Arm.shoulderEncoder.getPosition()
-        self.extenderPosition = self.Arm.extenderEncoder.getPosition()
         self.IDLE = True
-        self.BALANCE = False
         self.DriveTrain.moveDistance(18)
 
 
