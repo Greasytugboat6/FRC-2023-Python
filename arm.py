@@ -34,19 +34,11 @@ class Arm:
         self.shoulderPosition = self.shoulderEncoder.getPosition()
         self.extenderPosition = self.extenderEncoder.getPosition()
 
-    def setPosition(self, shoulderPosition, extenderPosition):
-        while ((self.shoulderEncoder.getPosition() > shoulderPosition + 0.1 or self.shoulderEncoder.getPosition() < shoulderPosition - 0.1) and 
-               (self.extenderEncoder.getPosition() > extenderPosition + 0.1 or self.extenderEncoder.getPosition() < shoulderPosition - 0.1)):
-            self.shoulderPIDController.setReference(shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
-            self.extenderPIDController.setReference(extenderPosition, rev.CANSparkMax.ControlType.kPosition)
-
     def teleopInit(self):
-        self.shoulderTarget = self.shoulderEncoder.getPosition()
         self.shoulderEncoder.setPosition(0)
-        self.shoulderPIDController.setReference(self.shoulderTarget, rev.CANSparkMax.ControlType.kPosition)
-        self.extenderTarget = self.extenderEncoder.getPosition()
+        self.shoulderTarget = self.shoulderEncoder.getPosition()
         self.extenderEncoder.setPosition(0)
-        self.extenderPIDController.setReference(self.extenderTarget, rev.CANSparkMax.ControlType.kPosition)
+        self.extenderTarget = self.extenderEncoder.getPosition()
 
     def teleopPeriodic(self):
         # Handles control on the intake motor.
@@ -59,11 +51,9 @@ class Arm:
 
         # Handles control on the shoulder motor.
         if self.controller.getYButton():
-            # self.shoulderPIDController.setReference(0.25, rev.CANSparkMax.ControlType.kVelocity)
             self.shoulderMotor.set(0.5)    
             self.shoulderTarget = self.shoulderEncoder.getPosition()
         elif self.controller.getXButton():
-            # self.shoulderPIDController.setReference(-0.1, rev.CANSparkMax.ControlType.kVelocity)
             self.shoulderMotor.set(-0.01)
             self.shoulderTarget = self.shoulderEncoder.getPosition()
         else:
@@ -79,5 +69,5 @@ class Arm:
         else:
             self.extenderPIDController.setReference(self.extenderTarget, rev.CANSparkMax.ControlType.kPosition)
 
-        # print(f"Shoulder Target: {self.shoulderTarget}")
-        # print(f"Extender Target: {self.extenderTarget}")
+        print(f"Shoulder : {self.shoulderEncoder.getPosition()}")
+        print(f"Extender : {self.extenderEncoder.getPosition()}")

@@ -34,28 +34,8 @@ class DriveTrain:
 
         self.robotDrive = MecanumDrive(self.frontRightMotor, self.rearRightMotor, self.frontLeftMotor,
                                        self.rearLeftMotor)
-
-    def moveDistance(self, distance):
-        """Move the drive train a specified distance in inches."""
-        # does not currently work, worked on 10/21 
-        print("Moving")
-
-        self.frontRightEncoder.setPosition(0.0)
-        self.rearRightEncoder.setPosition(0.0)
-        self.frontLeftEncoder.setPosition(0.0)
-        self.rearLeftEncoder.setPosition(0.0)
-
-        distance /= 1.93
-
-        avgDistance = (abs(self.frontRightEncoder.getPosition()) + abs(self.rearRightEncoder.getPosition()) 
-                       + abs(self.frontLeftEncoder.getPosition()) + abs(self.rearLeftEncoder.getPosition())) / 4
         
-        while avgDistance < distance:
-            avgDistance = (abs(self.frontRightEncoder.getPosition()) + abs(self.rearRightEncoder.getPosition()) 
-                           + abs(self.frontLeftEncoder.getPosition()) + abs(self.rearLeftEncoder.getPosition())) / 4
-            print(f"Average Distance: {avgDistance}")
-            # print the encoder positions to see if that's the problem
-            self.robotDrive.driveCartesian(-.2, 0, 0)
+        self.AUTO = False
 
     def autoBalance(self):
         roll = self.gyroscope.getRoll() - self.intialRoll
@@ -71,7 +51,6 @@ class DriveTrain:
 
     def teleopPeriodic(self):
         # Handles the movement of the drive base.
-        #if abs(self.controller.getLeftX()) > 0.1 or abs(self.controller.getLeftY()) > 0.1 or abs(self.controller.getRightY()) > 0.1:
         self.robotDrive.driveCartesian(
             self.controller.getLeftY(),
             -self.controller.getLeftX(),
