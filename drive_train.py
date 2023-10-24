@@ -53,7 +53,8 @@ class DriveTrain:
         while avgDistance < distance:
             avgDistance = (abs(self.frontRightEncoder.getPosition()) + abs(self.rearRightEncoder.getPosition()) 
                            + abs(self.frontLeftEncoder.getPosition()) + abs(self.rearLeftEncoder.getPosition())) / 4
-            print(avgDistance)
+            print(f"Average Distance: {avgDistance}")
+            # print the encoder positions to see if that's the problem
             self.robotDrive.driveCartesian(-.2, 0, 0)
 
     def autoBalance(self):
@@ -62,7 +63,7 @@ class DriveTrain:
             self.robotDrive.driveCartesian(roll/100, 0, 0)
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
-        # print(roll)
+        print(f"Roll {roll}")
             
     def teleopInit(self):
         self.intialRoll = self.gyroscope.getRoll()
