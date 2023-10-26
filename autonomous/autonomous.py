@@ -41,5 +41,5 @@ class Autonomous(StatefulAutonomous):
     @timed_state(duration=7)
     def auto_balance(self):
         self.DriveTrain.robotDrive.driveCartesian(0,0,0)
-        self.DriveTrain.AUTO = True
+        self.DriveTrain.BALANCE = True
     

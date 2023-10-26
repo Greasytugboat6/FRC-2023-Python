@@ -6,6 +6,8 @@ from robot_map import CAN
 
 class DriveTrain:
     def __init__(self, controller):
+        self.BALANCE = False
+
         # Intializes motors for the drive basse.
         self.frontRightMotor = CANSparkMax(CAN.frontRightChannel, CANSparkMax.MotorType.kBrushless)
         self.rearRightMotor = CANSparkMax(CAN.rearRightChannel, CANSparkMax.MotorType.kBrushless)
@@ -22,13 +24,21 @@ class DriveTrain:
         self.controller = controller
         self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor,
                                        self.rearRightMotor)
+        
+    def autoBalance(self):
+        roll = self.gyroscope.getRoll() - self.intialRoll
+        if (abs(roll) > 1):
+            self.robotDrive.driveCartesian(roll/100, 0, 0)
+        else:
+            self.robotDrive.driveCartesian(0, 0, 0)
+        print(f"Roll: {roll}")
 
     def autonomousInit(self):
         self.intialRoll = self.DriveTrain.gyroscope.getRoll()
         self.DriveTrain.robotDrive.setSafetyEnabled(False)
     
     def autonomousPeriodic(self):
-        if (self.AUTO):
+        if (self.BALANCE):
             self.autoBalance()
 
     def teleopInit(self):
