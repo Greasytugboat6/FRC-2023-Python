@@ -1,4 +1,5 @@
 import rev
+# from rev import CANSparkMax has issues with the library for some reason
 
 from robot_map import CAN
 

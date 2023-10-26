@@ -1,18 +1,20 @@
-from rev import CANSparkMax
+import rev
+# from rev import CANSparkMax has issues with the library for some reason
+from wpilib import SPI
 from wpilib.drive import MecanumDrive
+from navx import AHRS
 
 from robot_map import CAN
-
 
 class DriveTrain:
     def __init__(self, controller):
         self.BALANCE = False
 
         # Intializes motors for the drive basse.
-        self.frontRightMotor = CANSparkMax(CAN.frontRightChannel, CANSparkMax.MotorType.kBrushless)
-        self.rearRightMotor = CANSparkMax(CAN.rearRightChannel, CANSparkMax.MotorType.kBrushless)
-        self.frontLeftMotor = CANSparkMax(CAN.frontLeftChannel, CANSparkMax.MotorType.kBrushless)
-        self.rearLeftMotor = CANSparkMax(CAN.rearLeftChannel, CANSparkMax.MotorType.kBrushless)
+        self.frontRightMotor = rev.CANSparkMax(CAN.frontRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearRightMotor = rev.CANSparkMax(CAN.rearRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.frontLeftMotor = rev.CANSparkMax(CAN.frontLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearLeftMotor = rev.CANSparkMax(CAN.rearLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
         self.frontRightMotor.restoreFactoryDefaults()
         self.rearRightMotor.restoreFactoryDefaults()
         self.frontLeftMotor.restoreFactoryDefaults()
