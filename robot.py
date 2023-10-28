@@ -16,7 +16,6 @@ class MyRobot(wpilib.TimedRobot):
         self.components = {"DriveTrain": self.DriveTrain,
                            "Arm": self.Arm}
         self.auto = AutonomousModeSelector("autonomous", self.components)
-        self.auto.active_mode = self.auto.modes["Auto Mode"]
 
     def autonomousInit(self):
         """This function is run once each time the robot enters autonomous mode."""
@@ -26,6 +25,8 @@ class MyRobot(wpilib.TimedRobot):
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous."""
+        self.Arm.autonomousPeriodic()
+        self.DriveTrain.autonomousPeriodic()
         self.auto.periodic()
     
     def disabledInit(self):
@@ -42,7 +43,7 @@ class MyRobot(wpilib.TimedRobot):
         self.Arm.teleopPeriodic()
         if self.controller.getStartButton():
             self.Arm.shoulderEncoder.setPosition(0)
-            self.Arm.extenderPosition.setPosition(0)
+            self.Arm.extenderEncoder.setPosition(0)
         if self.controller.getBackButton():
             # resets the yaw
             self.DriveTrain.gyroscope.reset()
