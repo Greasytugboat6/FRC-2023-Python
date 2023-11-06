@@ -19,7 +19,7 @@ class Autonomous(StatefulAutonomous):
     def shoulder1(self):
         self.Arm.shoulderPosition = 18
 
-    @timed_state(duration=0.5, next_state="extender2")
+    @timed_state(duration=0.35, next_state="extender2")
     def drive1(self):
         self.DriveTrain.robotDrive.driveCartesian(-0.2,0,0)
 
@@ -41,12 +41,12 @@ class Autonomous(StatefulAutonomous):
     def shoulder2(self):
         self.Arm.shoulderPosition = 5
 
-    @timed_state(duration=2.2, next_state="balance")
+    @timed_state(duration=1.6, next_state="balance")
     def drive2(self):
-        # maybe use 1.3 for auto balancing and 2.2 for getting out of the community (mobility
-        self.DriveTrain.robotDrive.driveCartesian(0.2, 0, 0)
+        # mobility
+        self.DriveTrain.robotDrive.driveCartesian(0.6, 0, 0)
 
-    @state()
+    @timed_state(duration=5)
     def balance(self):
-        self.DriveTrain.robotDrive.driveCartesian(0,0,0)
-        self.DriveTrain.BALANCE = True
+        self.DriveTrain.robotDrive.driveCartesian(0, 0, 0)
+        # self.DriveTrain.BALANCE = True

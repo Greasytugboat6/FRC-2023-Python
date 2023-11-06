@@ -36,7 +36,7 @@ class DriveTrain:
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
 
-        # print(f"Roll: {roll}")
+        print(f"Roll: {roll}")
 
     def autonomousInit(self):
         self.intialRoll = self.gyroscope.getRoll()
