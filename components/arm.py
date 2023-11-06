@@ -27,7 +27,7 @@ class Arm:
         self.extenderPIDController.setI(0.0)
         self.extenderPIDController.setD(7)
         self.extenderPIDController.setFF(0.0)
-        self.extenderPosition = self.extenderMotor.getEncoder()
+        self.extenderEncoder = self.extenderMotor.getEncoder()
 
         # Sets up the controller.
         self.controller = controller
@@ -35,9 +35,9 @@ class Arm:
     def teleopInit(self):
         # Intializes position to 0
         self.shoulderEncoder.setPosition(0)
-        self.shoulderPosition = self.shoulderEncoder.getPosition()
-        self.extenderPosition.setPosition(0)
-        self.extenderTarget = self.extenderPosition.getPosition()
+        self.shoulderPosition = 0
+        self.extenderEncoder.setPosition(0)
+        self.extenderPosition = 0
 
         # Sets PID values for teleoperated.
         self.shoulderPIDController.setP(0.5)
@@ -69,40 +69,40 @@ class Arm:
             self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
 
         # Handles control on the extender motor.
-        if self.controller.getPOV() == 180:
+        if self.controller.getPOV() == 0:
             self.extenderMotor.set(0.25)
-            self.extenderTarget = self.extenderPosition.getPosition()
-        elif self.controller.getPOV() == 0:
+            self.extenderPosition = self.extenderEncoder.getPosition()
+        elif self.controller.getPOV() == 180:
             self.extenderMotor.set(-0.25)
-            self.extenderTarget = self.extenderPosition.getPosition()
+            self.extenderPosition = self.extenderEncoder.getPosition()
         else:
-            self.extenderPIDController.setReference(self.extenderTarget, rev.CANSparkMax.ControlType.kPosition)
+            self.extenderPIDController.setReference(self.extenderPosition, rev.CANSparkMax.ControlType.kPosition)
 
-        print(f"Shoulder : {self.shoulderEncoder.getPosition()}")
-        print(f"Extender : {self.extenderPosition.getPosition()}")
+        # print(f"Shoulder : {self.shoulderEncoder.getPosition()}")
+        # print(f"Extender : {self.extenderEncoder.getPosition()}")
 
 
     def autonomousInit(self):
         # Intializes position to 0
         self.shoulderEncoder.setPosition(0)
-        self.shoulderPosition = self.Arm.shoulderEncoder.getPosition()
-        self.extenderPosition.setPosition(0)
-        self.extenderTarget = self.Arm.extenderEncoder.getPosition()
+        self.shoulderPosition = 0
+        self.extenderEncoder.setPosition(0)
+        self.extenderPosition = 0
 
         # Sets PID values for AUTO
         self.shoulderPIDController.setP(0.5)
         self.shoulderPIDController.setI(0.0)
-        self.shoulderPIDController.setD(.1)
+        self.shoulderPIDController.setD(1)
         self.shoulderPIDController.setFF(0.0)
         self.extenderPIDController.setP(0.5)
         self.extenderPIDController.setI(0.0)
         self.extenderPIDController.setD(.1)
         self.extenderPIDController.setFF(0.0)
 
-        print(f"Auto Shoulder : {self.shoulderEncoder.getPosition()}")
-        print(f"Auto Extender : {self.extenderPosition.getPosition()}")
+        # print(f"Auto Shoulder : {self.shoulderEncoder.getPosition()}")
+        # print(f"Auto Extender : {self.extenderEncoder.getPosition()}")
     
     def autonomousPeriodic(self):
         # Move to position
-        self.shoulderPIDController.setReference(self.Arm.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
-        self.extenderPIDController.setReference(self.Arm.extenderPosition, rev.CANSparkMax.ControlType.kPosition)
+        self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
+        self.extenderPIDController.setReference(self.extenderPosition, rev.CANSparkMax.ControlType.kPosition)

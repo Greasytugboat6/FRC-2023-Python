@@ -26,6 +26,8 @@ class DriveTrain:
         self.controller = controller
         self.robotDrive = MecanumDrive(self.frontLeftMotor, self.rearLeftMotor, self.frontRightMotor,
                                        self.rearRightMotor)
+        self.gyroscope = AHRS(SPI.Port.kMXP)
+        self.gyroscope.reset()
         
     def autoBalance(self):
         roll = self.gyroscope.getRoll() - self.intialRoll
@@ -33,17 +35,19 @@ class DriveTrain:
             self.robotDrive.driveCartesian(roll/100, 0, 0)
         else:
             self.robotDrive.driveCartesian(0, 0, 0)
+
         print(f"Roll: {roll}")
 
     def autonomousInit(self):
-        self.intialRoll = self.DriveTrain.gyroscope.getRoll()
-        self.DriveTrain.robotDrive.setSafetyEnabled(False)
+        self.intialRoll = self.gyroscope.getRoll()
+        self.robotDrive.setSafetyEnabled(False)
     
     def autonomousPeriodic(self):
         if (self.BALANCE):
             self.autoBalance()
 
     def teleopInit(self):
+        self.intialRoll = self.gyroscope.getRoll()
         self.robotDrive.setSafetyEnabled(True)
 
     def teleopPeriodic(self):
@@ -51,5 +55,8 @@ class DriveTrain:
         self.robotDrive.driveCartesian(
             self.controller.getLeftY(),
             self.controller.getLeftX(),
-            self.controller.getRightY()
+            0.5 * self.controller.getRightX()
         )
+
+        if self.controller.getLeftBumper():
+            self.autoBalance()
